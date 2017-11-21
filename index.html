@@ -4,24 +4,61 @@
 	<title>giphyApi</title>
 </head>
 <body>
-		
+		<form>
 	<input type ="text" id ="search" value = "">
 	<button id = "submit">submit</button>
-
+		</form>
+		<div id ="buttons-view">
+		</div>
 	</div>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type ="text/javascript">
 
+
+var cartoons = ["scooby doo", "speed Racer", "ninja turtles", "ghost busters"];
+
+function cartoonName(){
+	console.log($(this).attr("data-name"))
+}
+
+function renderbuttons(){
+
+	$("#buttons-view").empty();
+
+	for (var i=0; i<cartoons.length; i++){
+	var a = $("<button>")
+	a.addClass("cartoon");
+	a.attr("data-name", cartoons[i]);
+	a.text(cartoons[i]);
+	$("#buttons-view").append(a);
+}
+
+}
+
 $(document).ready(function(){
 
 
-$("#submit").on("click", function(){
+$("#submit").on("click", function(event){
+	event.preventDefault();
 
 
-	var x = $("#search").val().trim();
-	var queryURL = "http://api.giphy.com/v1/gifs/search?q="+x+"&api_key=NDBWnAGw2Jpr37YBXkMU612mDLuMaQMk&limit=10";
+	var title = $("#text").val().trim();
+
+	if(title === "")
+	{
+		return;
+	}
+
+	$("#text").val("");
+	cartoons.push(title);
+	var value = $(this).attr("data-test");
+	console.log(value);
+	renderButtons();
+
+
+	var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=NDBWnAGw2Jpr37YBXkMU612mDLuMaQMk&limit=10";
 	console.log(x);
 
 	$.ajax({url:queryURL,method:'GET'})
@@ -29,9 +66,8 @@ $("#submit").on("click", function(){
 		console.log(response);
 		for (var i=0; i<response.data.length;i++)
 		{
-			$('body').append("<button>'" + response.data[i].images.downsized.url + "</button")
+			$('body').append("<button>'" + response.data[i].images.downsized.url + "</button>")
 		}
-		return false;
 	});
 });
 });
